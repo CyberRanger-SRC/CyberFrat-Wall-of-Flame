@@ -1,11 +1,11 @@
-// Web Audio API procedural sound engine for cinematic Diwali ambiance
+// Web Audio API procedural sound engine for Diwali sound effects
+// Note: Continuous background humming/drone has been completely removed.
+// Audio is only triggered on festive actions (e.g. diya ignition chime and grand finale).
 
 class SoundEngine {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = true;
   private masterGain: GainNode | null = null;
-  private ambientOscs: OscillatorNode[] = [];
-  private isPlayingAmbient: boolean = false;
 
   private init() {
     if (!this.ctx) {
@@ -26,9 +26,6 @@ class SoundEngine {
     if (this.masterGain && this.ctx) {
       const targetGain = this.isMuted ? 0 : 0.45;
       this.masterGain.gain.setTargetAtTime(targetGain, this.ctx.currentTime, 0.1);
-      if (!this.isMuted && !this.isPlayingAmbient) {
-        this.startAmbientPad();
-      }
     }
     return !this.isMuted;
   }
@@ -37,50 +34,7 @@ class SoundEngine {
     return this.isMuted;
   }
 
-  // Meditative warm golden drone pad (F# and C# warm fifths with soft detuning)
-  private startAmbientPad() {
-    if (!this.ctx || !this.masterGain || this.isPlayingAmbient) return;
-    this.isPlayingAmbient = true;
-
-    // Frequencies for a warm, celestial ambient drone (F#2, C#3, F#3, A#3)
-    const freqs = [92.5, 138.59, 185.0, 233.08];
-
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(450, this.ctx.currentTime);
-
-    const padGain = this.ctx.createGain();
-    padGain.gain.setValueAtTime(0.12, this.ctx.currentTime);
-    padGain.connect(this.masterGain);
-    filter.connect(padGain);
-
-    freqs.forEach((f, idx) => {
-      if (!this.ctx) return;
-      const osc = this.ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(f, this.ctx.currentTime);
-      // Subtle organic detune
-      osc.detune.setValueAtTime((idx % 2 === 0 ? 3 : -3) * (idx + 1), this.ctx.currentTime);
-
-      const oscGain = this.ctx.createGain();
-      oscGain.gain.setValueAtTime(0.25, this.ctx.currentTime);
-
-      // Low frequency oscillator for gentle breathing swell
-      const lfo = this.ctx.createOscillator();
-      lfo.frequency.setValueAtTime(0.1 + idx * 0.04, this.ctx.currentTime);
-      const lfoGain = this.ctx.createGain();
-      lfoGain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-      lfo.connect(lfoGain);
-      lfoGain.connect(oscGain.gain);
-
-      osc.connect(filter);
-      osc.start();
-      lfo.start();
-      this.ambientOscs.push(osc);
-    });
-  }
-
-  // Golden chime when a diya is ignited
+  // Golden chime when a diya is ignited (pleasant temple bell / chime)
   public playDiyaIgniteSound() {
     if (this.isMuted) return;
     this.init();
@@ -112,7 +66,7 @@ class SoundEngine {
     });
   }
 
-  // Grand celebration burst chord
+  // Grand celebration burst chord (only plays on 100% target celebration)
   public playFinaleBurst() {
     if (this.isMuted) return;
     this.init();
@@ -143,4 +97,3 @@ class SoundEngine {
 }
 
 export const soundManager = new SoundEngine();
-

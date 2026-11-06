@@ -69,7 +69,7 @@ export const TvView: React.FC<TvViewProps> = ({
               ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-[0_0_15px_rgba(255,180,0,0.3)]'
               : 'bg-black/60 border-white/10 text-zinc-400 hover:text-white'
           }`}
-          title={isMuted ? 'Unmute Ambient Chimes' : 'Mute Sound'}
+          title={isMuted ? 'Unmute Sound FX' : 'Mute Sound'}
         >
           {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
         </button>
