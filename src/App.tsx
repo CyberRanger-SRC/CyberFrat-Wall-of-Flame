@@ -97,6 +97,33 @@ export function App() {
     return () => unsubscribe();
   }, [diyas]);
 
+  // Poll for any diyas added remotely via Amazon Alexa
+  useEffect(() => {
+    const pollInterval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/alexa');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.diyas) && data.diyas.length > 0) {
+            setDiyas((prev) => {
+              const existingIds = new Set(prev.map((d) => d.id));
+              const newFromAlexa = data.diyas.filter((d: any) => !existingIds.has(d.id));
+              if (newFromAlexa.length > 0) {
+                soundManager.playDiyaIgniteSound();
+                return [...prev, ...newFromAlexa];
+              }
+              return prev;
+            });
+          }
+        }
+      } catch {
+        // Local preview or offline fallback
+      }
+    }, 3500);
+
+    return () => clearInterval(pollInterval);
+  }, []);
+
   // Illumination progress: 0.0 to 1.0
   const progress = Math.min(1.0, diyas.length / targetCount);
 

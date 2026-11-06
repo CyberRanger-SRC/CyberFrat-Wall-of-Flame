@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Sliders,
   Tv,
@@ -12,9 +12,14 @@ import {
   Radio,
   Eye,
   Trash2,
+  Mic,
+  Bot,
+  Square,
 } from 'lucide-react';
 import { DiyaData } from '../../types';
 import { soundManager } from '../../utils/sound';
+import { alexaVoice } from '../../utils/alexaVoice';
+import { getRandomQuote } from '../../data/funnyQuotes';
 
 interface ControlDeckViewProps {
   diyas: DiyaData[];
@@ -44,10 +49,27 @@ export const ControlDeckView: React.FC<ControlDeckViewProps> = ({
   onFireConfetti,
 }) => {
   const [isMuted, setIsMuted] = React.useState(soundManager.getIsMuted());
+  const [isAlexaSpeaking, setIsAlexaSpeaking] = useState(false);
 
   const handleToggleSound = () => {
     const unmuted = soundManager.toggleMute();
     setIsMuted(!unmuted);
+  };
+
+  const handleAlexaGreet = () => {
+    setIsAlexaSpeaking(true);
+    alexaVoice.greetEveryone(() => setIsAlexaSpeaking(false));
+  };
+
+  const handleAlexaQuote = () => {
+    setIsAlexaSpeaking(true);
+    const q = getRandomQuote();
+    alexaVoice.speak(`Here is your CyberFrat festive awareness thought: ${q.text}`, () => setIsAlexaSpeaking(false));
+  };
+
+  const handleAlexaStop = () => {
+    alexaVoice.stop();
+    setIsAlexaSpeaking(false);
   };
 
   return (
@@ -97,6 +119,62 @@ export const ControlDeckView: React.FC<ControlDeckViewProps> = ({
           </div>
         </div>
 
+        {/* Amazon Alexa Skill & Voice Assistant Broadcast Banner */}
+        <div className="p-6 rounded-3xl bg-gradient-to-r from-blue-950/40 via-amber-950/20 to-black border border-cyan-400/30 shadow-[0_0_30px_rgba(0,180,255,0.15)] flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shadow-[0_0_20px_rgba(0,200,255,0.3)]">
+              <Mic className="w-7 h-7" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-cyan-400 font-bold">
+                  Amazon Alexa Skill & Audio Voice Assistant
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-[10px] font-mono">
+                  Endpoint: /api/alexa
+                </span>
+              </div>
+              <h2 className="text-xl font-cinzel font-bold text-white">
+                Alexa Festive Voice Broadcast
+              </h2>
+              <p className="text-xs text-zinc-400 max-w-lg mt-0.5">
+                Say <span className="text-cyan-300 font-mono">"Alexa, ask CyberFrat Diwali to greet everyone"</span> or trigger live speech directly from this deck!
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleAlexaGreet}
+              className={`px-5 py-3 rounded-2xl font-cinzel font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-lg ${isAlexaSpeaking
+                  ? 'bg-cyan-500 text-black border-cyan-300 shadow-[0_0_20px_rgba(0,200,255,0.6)] animate-pulse'
+                  : 'bg-gradient-to-r from-cyan-600 via-cyan-500 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white border border-cyan-400/40'
+                }`}
+            >
+              <Mic className="w-4 h-4" />
+              <span>{isAlexaSpeaking ? 'Alexa Speaking...' : '🎙️ Greet Everyone Live'}</span>
+            </button>
+
+            <button
+              onClick={handleAlexaQuote}
+              className="px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 text-xs font-medium flex items-center gap-2 transition-all"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Speak Awareness Quote</span>
+            </button>
+
+            {isAlexaSpeaking && (
+              <button
+                onClick={handleAlexaStop}
+                className="p-3 rounded-2xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-900 transition-all"
+                title="Stop Alexa Speaking"
+              >
+                <Square className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Action Controls Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Column 1: Show & Stage Triggers */}
@@ -107,11 +185,10 @@ export const ControlDeckView: React.FC<ControlDeckViewProps> = ({
 
             <button
               onClick={onToggleFinale}
-              className={`w-full py-3.5 px-4 rounded-xl border font-cinzel font-bold text-sm tracking-wide uppercase transition-all flex items-center justify-center gap-2 ${
-                isFinale
+              className={`w-full py-3.5 px-4 rounded-xl border font-cinzel font-bold text-sm tracking-wide uppercase transition-all flex items-center justify-center gap-2 ${isFinale
                   ? 'bg-amber-500 text-black border-amber-400 shadow-[0_0_25px_rgba(255,180,0,0.5)]'
                   : 'bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black border-amber-400/50'
-              }`}
+                }`}
             >
               <Flame className="w-4 h-4" />
               {isFinale ? 'End Grand Finale' : '🎆 Trigger 100% Grand Finale'}
@@ -244,11 +321,10 @@ export const ControlDeckView: React.FC<ControlDeckViewProps> = ({
               return (
                 <div
                   key={d.id}
-                  className={`p-3.5 rounded-2xl border text-left flex flex-col justify-between transition-all ${
-                    isSpotlighted
+                  className={`p-3.5 rounded-2xl border text-left flex flex-col justify-between transition-all ${isSpotlighted
                       ? 'bg-amber-500/20 border-amber-400 shadow-[0_0_15px_rgba(255,180,0,0.3)]'
                       : 'bg-white/5 border-white/10 hover:border-white/20'
-                  }`}
+                    }`}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
@@ -270,11 +346,10 @@ export const ControlDeckView: React.FC<ControlDeckViewProps> = ({
                   <div className="mt-3 pt-2 border-t border-white/10 flex items-center justify-end">
                     <button
                       onClick={() => onSelectDiya(d)}
-                      className={`px-3 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-all ${
-                        isSpotlighted
+                      className={`px-3 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-all ${isSpotlighted
                           ? 'bg-amber-400 text-black font-bold'
                           : 'bg-white/10 hover:bg-amber-500/20 text-zinc-300 hover:text-amber-300'
-                      }`}
+                        }`}
                     >
                       <Eye className="w-3 h-3" />
                       {isSpotlighted ? 'Spotlighted on TV' : 'Spotlight on 65" TV'}

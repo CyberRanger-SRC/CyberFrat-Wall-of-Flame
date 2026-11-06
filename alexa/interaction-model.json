@@ -1,0 +1,101 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "cyberfrat diwali",
+      "intents": [
+        {
+          "name": "HelloIntent",
+          "slots": [],
+          "samples": [
+            "hello",
+            "hi",
+            "hello alexa",
+            "hi alexa",
+            "namaste",
+            "start",
+            "begin",
+            "hey"
+          ]
+        },
+        {
+          "name": "ProvideNameIntent",
+          "slots": [
+            {
+              "name": "Name",
+              "type": "AMAZON.FirstName"
+            }
+          ],
+          "samples": [
+            "{Name}",
+            "my name is {Name}",
+            "i am {Name}",
+            "this is {Name}",
+            "it is {Name}",
+            "call me {Name}",
+            "name is {Name}",
+            "myself {Name}"
+          ]
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": [
+            "yes",
+            "yeah",
+            "yes please",
+            "sure",
+            "definitely",
+            "light a diya",
+            "i want to light a diya",
+            "light it",
+            "of course",
+            "absolutely",
+            "yep",
+            "yes i do"
+          ]
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": [
+            "no",
+            "nope",
+            "no thanks",
+            "not now",
+            "maybe later",
+            "don't light it",
+            "no i don't",
+            "nah"
+          ]
+        },
+        {
+          "name": "GreetEveryoneIntent",
+          "slots": [],
+          "samples": [
+            "greet everyone",
+            "greet our guests",
+            "welcome everyone",
+            "say happy diwali",
+            "give a festive greeting",
+            "greet the team"
+          ]
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  }
+}

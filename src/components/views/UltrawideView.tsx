@@ -4,7 +4,9 @@ import { Flame, Sparkles, Volume2, VolumeX, Send } from 'lucide-react';
 import { DiyaData } from '../../types';
 import { getRandomQuote } from '../../data/funnyQuotes';
 import { soundManager } from '../../utils/sound';
+import { alexaVoice } from '../../utils/alexaVoice';
 import { HappyDiwaliPopup } from '../ui/HappyDiwaliPopup';
+import { AlexaVoiceModal } from '../ui/AlexaVoiceModal';
 
 interface UltrawideViewProps {
   diyas: DiyaData[];
@@ -35,6 +37,7 @@ export const UltrawideView: React.FC<UltrawideViewProps> = ({
   const [popupDiya, setPopupDiya] = useState<DiyaData | null>(null);
   const [hoveredDiya, setHoveredDiya] = useState<DiyaData | null>(null);
   const [isMuted, setIsMuted] = useState(soundManager.getIsMuted());
+  const [isAlexaModalOpen, setIsAlexaModalOpen] = useState(false);
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const wallScrollRef = useRef<HTMLDivElement>(null);
@@ -110,17 +113,28 @@ export const UltrawideView: React.FC<UltrawideViewProps> = ({
           </div>
         </div>
 
-        {/* Audio Toggle */}
-        <button
-          onClick={() => {
-            const unmuted = soundManager.toggleMute();
-            setIsMuted(!unmuted);
-          }}
-          className="p-3 rounded-2xl bg-black/60 border border-white/10 text-zinc-300 hover:text-amber-300 hover:border-amber-400/40 transition-all shadow-md"
-          title="Toggle Audio"
-        >
-          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-        </button>
+        {/* Audio & Alexa Voice Controls */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsAlexaModalOpen(true)}
+            className="px-3.5 py-2 rounded-2xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/50 text-cyan-200 text-xs font-cinzel font-bold flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(0,200,255,0.25)] hover:scale-105"
+            title="Alexa Voice Skill Interaction"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Talk to Alexa</span>
+          </button>
+
+          <button
+            onClick={() => {
+              const unmuted = soundManager.toggleMute();
+              setIsMuted(!unmuted);
+            }}
+            className="p-3 rounded-2xl bg-black/60 border border-white/10 text-zinc-300 hover:text-amber-300 hover:border-amber-400/40 transition-all shadow-md"
+            title="Toggle Audio"
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
+        </div>
       </div>
 
       {/* ======================================================== */}
@@ -287,6 +301,15 @@ export const UltrawideView: React.FC<UltrawideViewProps> = ({
       <HappyDiwaliPopup
         diya={popupDiya}
         onClose={() => setPopupDiya(null)}
+      />
+
+      {/* ======================================================== */}
+      {/* 5. INTERACTIVE ALEXA VOICE DIALOG MODAL                  */}
+      {/* ======================================================== */}
+      <AlexaVoiceModal
+        isOpen={isAlexaModalOpen}
+        onClose={() => setIsAlexaModalOpen(false)}
+        onLightDiya={onLightDiya}
       />
     </div>
   );
