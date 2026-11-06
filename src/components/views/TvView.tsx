@@ -60,22 +60,8 @@ export const TvView: React.FC<TvViewProps> = ({
         aspectMode="standard"
       />
 
-      {/* Floating Top Installation Brand (Discreet and Regal) */}
-      <div className="absolute top-8 left-8 z-30 pointer-events-none flex items-center gap-3">
-        <div className="px-5 py-2.5 rounded-full bg-black/60 backdrop-blur-2xl border border-amber-400/30 flex items-center gap-3 shadow-[0_0_30px_rgba(255,180,0,0.25)]">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
-          <span className="text-xs font-cinzel font-black tracking-widest uppercase text-amber-200">
-            CyberFrat Diwali • 65" Installation
-          </span>
-          <span className="text-zinc-500">|</span>
-          <span className="text-xs font-mono text-amber-300">
-            {diyas.length} / {targetCount} Diyas Lit ({Math.round(progress * 100)}% Filled)
-          </span>
-        </div>
-      </div>
-
-      {/* Discreet Audio & Fullscreen Toggle (Top Right) */}
-      <div className="absolute top-8 right-8 z-30 flex items-center gap-2.5">
+      {/* Discreet Audio & Fullscreen Toggle (Fades in on mouse hover) */}
+      <div className="absolute top-6 right-6 z-30 flex items-center gap-2.5 opacity-0 hover:opacity-100 transition-opacity duration-300">
         <button
           onClick={handleToggleSound}
           className={`p-3 rounded-full backdrop-blur-xl border transition-all ${

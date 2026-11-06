@@ -252,58 +252,56 @@ export function App() {
 
   return (
     <div className="w-screen h-screen overflow-hidden bg-[#030308] relative">
-      {/* View Switcher Floating Bar (Can be hidden during presentation) */}
-      <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-black/75 backdrop-blur-xl border border-amber-400/30 shadow-[0_4px_25px_rgba(0,0,0,0.8)]">
-          <button
-            onClick={() => changeView('ultrawide')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all ${
-              currentView === 'ultrawide'
-                ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(255,180,0,0.4)]'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Monitor className="w-3.5 h-3.5" />
-            <span>Wall of Flame</span>
-          </button>
+      {/* View Switcher Floating Bar (Hidden on 65" TV for a pure, borderless art installation) */}
+      {currentView !== 'tv' && (
+        <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-black/75 backdrop-blur-xl border border-amber-400/30 shadow-[0_4px_25px_rgba(0,0,0,0.8)]">
+            <button
+              onClick={() => changeView('ultrawide')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all ${
+                currentView === 'ultrawide'
+                  ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(255,180,0,0.4)]'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              <span>Wall of Flame</span>
+            </button>
 
-          <button
-            onClick={() => changeView('tv')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all ${
-              currentView === 'tv'
-                ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(255,180,0,0.4)]'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Tv className="w-3.5 h-3.5" />
-            <span>65" TV Display</span>
-          </button>
+            <button
+              onClick={() => changeView('tv')}
+              className="px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all text-zinc-400 hover:text-white"
+            >
+              <Tv className="w-3.5 h-3.5" />
+              <span>65" TV Display</span>
+            </button>
 
-          <button
-            onClick={() => changeView('mobile')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all ${
-              currentView === 'mobile'
-                ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(255,180,0,0.4)]'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <QrCode className="w-3.5 h-3.5" />
-            <span>Laptop 1 / Phone QR</span>
-          </button>
+            <button
+              onClick={() => changeView('mobile')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all ${
+                currentView === 'mobile'
+                  ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(255,180,0,0.4)]'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <QrCode className="w-3.5 h-3.5" />
+              <span>Laptop 1 / Phone QR</span>
+            </button>
 
-          <button
-            onClick={() => changeView('control')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all ${
-              currentView === 'control'
-                ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(255,180,0,0.4)]'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Sliders className="w-3.5 h-3.5" />
-            <span>Laptop 2 Director</span>
-          </button>
+            <button
+              onClick={() => changeView('control')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all ${
+                currentView === 'control'
+                  ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(255,180,0,0.4)]'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <Sliders className="w-3.5 h-3.5" />
+              <span>Laptop 2 Director</span>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Render Active View */}
       {currentView === 'tv' && (
